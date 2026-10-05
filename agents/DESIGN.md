@@ -38,7 +38,16 @@ Each obstacle agent has a distinctive solid flat color across both 2D floor plan
 | **Clear Glass Window**| `#60A5FA` | Solid light blue (60% opacity, zero gradient) (~2 dB) |
 | **Metal Sheet** | `#475569` | Solid slate; near-total reflection / blockage (~25+ dB) |
 
-### C. Signal Heatmap (Stepped Discrete Iso-Bands)
+### C. Interior Furniture Agents (Solid Flat Object Colors)
+| Furniture Agent | Solid Color | Visual CAD Appearance & Material Representation |
+| :--- | :--- | :--- |
+| **Refrigerator / Metal Appliance** | `#64748B` | Solid metallic cool slate; high specular reflection (R ~ 0.90) |
+| **Full-Length Mirror** | `#93C5FD` | Solid ice cyan; RF reflective mirror (R ~ 0.85) |
+| **Fish Aquarium / Water Jug** | `#0284C7` | Solid deep ocean blue; extreme dielectric absorption |
+| **Wardrobe / Clothes Closet** | `#B45309` | Solid dark amber wood; heavy RF absorption |
+| **Sofa / Upholstered Bed** | `#6B7280` | Solid warm gray textile; mild attenuation |
+
+### D. Signal Heatmap (Stepped Discrete Iso-Bands)
 **Critical Directive:** No smooth gradient interpolation. Signal distribution is rendered as distinct, stepped iso-contour bands matching engineering field analysis tools:
 
 | Signal Level (RSSI) | Link Quality | Solid Flat Color | Real-World User Impact |
