@@ -50,14 +50,17 @@
 1. **Emitter Agent (WiFi Router / Access Point):**
    - Transmit power (default: $20\text{ dBm} / 100\text{ mW}$).
    - Frequency band toggle: $2.4\text{ GHz}$ vs. $5.0\text{ GHz}$ vs. $6.0\text{ GHz}$.
-   - Antenna radiation pattern (omnidirectional standard).
-2. **Obstacle / Attenuator Agents (Structural Elements):**
-   - **Walls:** Concrete, Brick, Drywall, Wood, Metal.
-   - **Openings:** Wooden Doors, Glass Windows.
-   - Properties: Length, thickness ($0.1\text{m} - 0.3\text{m}$), and RF attenuation coefficient (dB drop per penetration).
-3. **Receiver Agents (Client Devices):**
-   - Laptops, Smartphones, Smart TVs, IoT sensors.
-   - Live telemetry: Displays real-time RSSI (in $-\text{dBm}$), connection link speed estimation (in $\text{Mbps}$), and signal quality tier.
+   - Channel bandwidth ($20, 40, 80, 160\text{ MHz}$) & MIMO streams ($1\times1, 2\times2, 4\times4$).
+   - Autonomous behavior rules: Band steering, dynamic modulation rate fallback, and channel load congestion.
+2. **Obstacle Agents (Structural & Interior Attenuators):**
+   - **Structural Walls:** Concrete, Brick, Drywall, Wood, Metal, Openings (Doors, Windows).
+   - **Furniture / Interior Objects (`FurnitureAgent`):** 3D volumetric obstacles (Refrigerator, Mirror, Fish Aquarium, Wardrobe, Sofa).
+   - Dual physical interaction rules: **Transmission Loss** (absorption) and **Specular Reflection** (multipath bounce).
+3. **Receiver Agents (Client Devices with Distinct Personas):**
+   - **Gamer PC Persona:** Demands low latency (<20ms) and high SNR (>25 dB); logs retransmissions and frustration score.
+   - **4K Streamer Persona (Smart TV):** Demands sustained throughput (>25 Mbps); simulates adaptive buffer depletion and downscaling (4K -> 1080p -> buffering).
+   - **IoT Sensor Persona:** Low-power sleep/wake cycle; verifies link reliability on brief wakeups.
+   - **Mobile Smartphone Persona:** Navigates spatial waypoints through rooms, evaluating roaming handover thresholds ($<-75\text{ dBm}$).
 
 ### 4.5 Simulation & Analysis Engine (Python FastAPI)
 - **Multi-Wall Path Loss Computation:** Combines Free-Space Path Loss (FSPL) with obstacle penetration loss along direct ray vectors using NumPy vectorization.

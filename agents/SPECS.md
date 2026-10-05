@@ -59,16 +59,45 @@ Where:
 
 Standard attenuation losses measured across international wireless benchmarks (ITU-R P.1238 & NIST studies):
 
-| Obstacle Material | Thickness (Typical) | Attenuation @ 2.4 GHz | Attenuation @ 5.0 GHz | CAD Visual Color |
-| :--- | :--- | :--- | :--- | :--- |
-| **Reinforced Concrete** | $15 - 20\text{ cm}$ | $14.0\text{ dB}$ | $22.0\text{ dB}$ | `#718096` |
-| **Red Brick Wall** | $12 - 15\text{ cm}$ | $8.0\text{ dB}$ | $14.0\text{ dB}$ | `#C25E40` |
-| **Drywall / Gypsum** | $10\text{ cm}$ | $3.0\text{ dB}$ | $5.0\text{ dB}$ | `#CBD5E1` |
-| **Solid Wood / Timber**| $5 - 10\text{ cm}$ | $4.0\text{ dB}$ | $7.0\text{ dB}$ | `#A2714B` |
-| **Interior Wooden Door**| $4\text{ cm}$ | $2.5\text{ dB}$ | $4.0\text{ dB}$ | `#855836` |
-| **Window Glass (Standard)**| $0.6\text{ cm}$| $2.0\text{ dB}$ | $3.5\text{ dB}$ | `#60A5FA` |
-| **Low-E Coated Glass** | $0.8\text{ cm}$ | $8.0\text{ dB}$ | $12.0\text{ dB}$ | `#38BDF8` |
-| **Metal Door / Sheet** | $0.2 - 0.5\text{ cm}$| $28.0\text{ dB}$ | $35.0\text{ dB}$ | `#475569` |
+| Obstacle Material | Thickness (Typical) | Attenuation @ 2.4 GHz | Attenuation @ 5.0 GHz | Reflection Coeff (R) | CAD Visual Color |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Reinforced Concrete** | $15 - 20\text{ cm}$ | $14.0\text{ dB}$ | $22.0\text{ dB}$ | $0.20$ | `#718096` |
+| **Red Brick Wall** | $12 - 15\text{ cm}$ | $8.0\text{ dB}$ | $14.0\text{ dB}$ | $0.15$ | `#C25E40` |
+| **Drywall / Gypsum** | $10\text{ cm}$ | $3.0\text{ dB}$ | $5.0\text{ dB}$ | $0.10$ | `#CBD5E1` |
+| **Solid Wood / Timber**| $5 - 10\text{ cm}$ | $4.0\text{ dB}$ | $7.0\text{ dB}$ | $0.12$ | `#A2714B` |
+| **Interior Wooden Door**| $4\text{ cm}$ | $2.5\text{ dB}$ | $4.0\text{ dB}$ | $0.10$ | `#855836` |
+| **Window Glass (Standard)**| $0.6\text{ cm}$| $2.0\text{ dB}$ | $3.5\text{ dB}$ | $0.15$ | `#60A5FA` |
+| **Low-E Coated Glass** | $0.8\text{ cm}$ | $8.0\text{ dB}$ | $12.0\text{ dB}$ | $0.40$ | `#38BDF8` |
+| **Metal Door / Sheet** | $0.2 - 0.5\text{ cm}$| $28.0\text{ dB}$ | $35.0\text{ dB}$ | $0.95$ | `#475569` |
+
+---
+
+## 3.1 Furniture & Interior Obstacle Agents Database
+
+Indoor objects are modeled with dual interactions: **Penetration Loss** (absorption) and **Specular Reflection** (multipath bounce):
+
+| Interior Object Agent | Typical Dimensions | Attenuation @ 2.4 GHz | Attenuation @ 5.0 GHz | Reflection Coeff (R) | RF Behavior & Real-World Impact | CAD Visual Color |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Refrigerator / Microwave** | $0.8\text{m} \times 0.8\text{m} \times 1.8\text{m}$ | $30.0\text{ dB}$ (Near Total) | $38.0\text{ dB}$ (Near Total) | $\mathbf{0.90}$ | **Extreme Reflector:** Blocks direct ray completely; reflects secondary waves to adjacent rooms. | `#64748B` |
+| **Full-Length Mirror** | $0.05\text{m} \times 1.2\text{m} \times 1.8\text{m}$ | $15.0\text{ dB}$ | $20.0\text{ dB}$ | $\mathbf{0.85}$ | **High Reflector:** Thin silver/aluminum metallic backing acts as an RF mirror shield. | `#93C5FD` |
+| **Fish Aquarium / Water Jug** | $0.4\text{m} \times 1.0\text{m} \times 0.6\text{m}$ | $\mathbf{16.0\text{ dB}}$ | $\mathbf{24.0\text{ dB}}$ | $0.25$ | **Extreme Absorber:** Water molecules exhibit high dielectric resonance, absorbing 2.4/5 GHz energy. | `#0284C7` |
+| **Wardrobe / Clothes Closet** | $0.6\text{m} \times 1.5\text{m} \times 2.0\text{m}$ | $8.0\text{ dB}$ | $12.0\text{ dB}$ | $0.15$ | **Moderate Absorber:** Dense timber + folded fabric clothing heavily muffles RF reach. | `#B45309` |
+| **Sofa / Upholstered Bed** | $1.0\text{m} \times 2.0\text{m} \times 0.8\text{m}$ | $2.5\text{ dB}$ | $4.0\text{ dB}$ | $0.05$ | **Mild Attenuator:** Low-density foam and textile causes minor signal drop. | `#6B7280` |
+
+---
+
+## 3.2 Specular Multipath Reflection Model (Image Source Method)
+For every planar surface (metal appliance, mirror, wall) with reflection coefficient $R$, the reflected ray path length $d_{\text{refl}}$ from emitter $E$ to receiver $R_{\text{rx}}$ bounced off mirror plane $P$ is calculated via the virtual image source $E'$:
+
+$$d_{\text{refl}} = \|R_{\text{rx}} - E'\|$$
+
+The reflected signal component power received is:
+
+$$P_{\text{refl}} (\text{dBm}) = P_{\text{tx}} + G_{\text{tx}} - \text{FSPL}(d_{\text{refl}}, f) + 10 \log_{10}(R) - \sum \text{WallLoss}$$
+
+Total effective received signal strength ($\text{RSSI}_{\text{total}}$) combines direct and reflected rays:
+
+$$\text{RSSI}_{\text{total}} = 10 \log_{10} \left( 10^{\frac{\text{RSSI}_{\text{direct}}}{10}} + 10^{\frac{P_{\text{refl}}}{10}} \right)$$
 
 ---
 
