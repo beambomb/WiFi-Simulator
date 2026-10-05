@@ -23,8 +23,8 @@ graph TD
     end
 
     subgraph Backend_Engine ["Python ABM & Physics Engine"]
-        AgentManager["Agent Manager (Routers, Walls, Clients, Probes)"]
-        NumPyPhysics["NumPy Vectorized RF Engine (FSPL + Multi-Wall)"]
+        AgentManager["Agent Manager (Routers, Walls, Furniture, Clients, Probes)"]
+        NumPyPhysics["NumPy Vectorized RF Engine (FSPL + Multi-Wall + Multipath Reflection)"]
         Optimizer["Smart Placement Advisor (Grid Search)"]
     end
 
@@ -175,6 +175,7 @@ wifi_simulator/
 │   └── agents/
 │       ├── emitter.py           # Router agent logic
 │       ├── attenuator.py        # Wall/obstacle agent logic
+│       ├── furniture.py         # 3D Furniture obstacle agent (refrigerator, mirror, etc.)
 │       └── receiver.py          # Client device agent logic
 └── frontend/                    # Web Client (Vanilla JS / Three.js)
     ├── index.html               # Single Page Application

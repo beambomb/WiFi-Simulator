@@ -28,8 +28,8 @@ graph TD
     end
 
     subgraph Backend_Engine ["Python ABM & Physics Engine"]
-        AgentManager["Agent Manager (Routers, Walls, Clients, Probes)"]
-        NumPyPhysics["NumPy Vectorized RF Engine (FSPL + Multi-Wall)"]
+        AgentManager["Agent Manager (Routers, Walls, Furniture, Clients, Probes)"]
+        NumPyPhysics["NumPy Vectorized RF Engine (FSPL + Multi-Wall + Multipath Reflection)"]
         Optimizer["Smart Placement Advisor (Grid Search)"]
     end
 
