@@ -63,17 +63,22 @@ This document outlines the phased development plan and task checklist for buildi
 ---
 
 ## Milestone 4: Agent Placement & CAD Drafting Tools
-*Goal: Enable interactive creation of physical agents (Walls, Doors, Windows, Routers, Devices).*
+*Goal: Enable interactive creation of physical agents (Walls, Doors, Windows, Furniture, Routers, Devices).*
 
-- [ ] Implement CAD Toolbar and Tool State Manager (Select, Wall, Door, Window, Router, Client Device).
+- [ ] Implement CAD Toolbar and Tool State Manager (Select, Wall, Door, Window, Furniture, Router, Client Device).
 - [ ] Implement Two-Click Wall Drafting Tool:
   - [ ] Click-and-drag wall creation with real-time length (m) and angle display.
   - [ ] Material selector (Concrete, Brick, Drywall, Wood, Metal) with flat color coding.
   - [ ] Wall opening placement (Wooden Door, Glass Window).
+- [ ] Implement Furniture / Interior Object Agent placement (`FurnitureAgent`):
+  - [ ] Volumetric 3D obstacle models (Refrigerator, Mirror, Fish Aquarium, Wardrobe, Sofa).
+  - [ ] Dimension controls (Width, Length, Height) and rotational orientation in CAD space.
+  - [ ] Material properties selector (Specular reflector vs. Extreme absorber).
 - [ ] Implement Router Agent placement:
-  - [ ] 3D router mesh/model with frequency toggle (2.4 GHz vs. 5.0 GHz) and TX power slider.
-- [ ] Implement Client Device placement:
-  - [ ] Device models (Laptop, Smartphone, Smart TV) with live telemetry badge.
+  - [ ] 3D router mesh/model with frequency toggle (2.4 GHz, 5.0 GHz, 6.0 GHz), channel bandwidth, and TX power slider.
+- [ ] Implement Client Device placement with distinct personas:
+  - [ ] Device models with persona selector (Gamer PC, 4K Streamer TV, IoT Sensor, Moving Mobile Phone).
+  - [ ] Live telemetry badges attached to devices.
 - [ ] Implement grid snapping ($0.25\text{ m}$ / $0.50\text{ m}$) and selection bounding boxes.
 
 ---
@@ -86,6 +91,8 @@ This document outlines the phased development plan and task checklist for buildi
 - [x] Establish WebSocket endpoint (`/ws/simulation/{id}`) for low-latency live calculation streaming.
 - [x] Calculate live RSSI ($-\text{dBm}$) and link speed estimates ($\text{Mbps}$) for placed client devices.
 - [x] Implement multi-parameter telemetry (MIMO streams, channel width, custom thickness, traffic satisfaction).
+- [ ] Implement `FurnitureAgent` raycasting and dual-interaction (transmission loss + specular multipath reflection bounce).
+- [ ] Implement dynamic ABM persona simulation loops (Gamer packet drop/retransmission tracker, 4K Streamer buffer/resolution adaptation, Mobile Roaming waypoint pathing).
 
 ---
 
