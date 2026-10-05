@@ -8,6 +8,7 @@ from backend.config import settings
 from backend.database import engine, Base
 from backend.api.auth import router as auth_router
 from backend.api.simulations import router as simulations_router
+from backend.api.simulation_engine import router as simulation_engine_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,6 +32,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(simulations_router)
+app.include_router(simulation_engine_router)
 
 @app.get("/health")
 def health_check():
