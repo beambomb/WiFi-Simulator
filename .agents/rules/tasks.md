@@ -81,11 +81,11 @@ This document outlines the phased development plan and task checklist for buildi
 ## Milestone 5: Python RF Simulation Engine & WebSocket Pipeline
 *Goal: Compute realistic electromagnetic propagation and stream live signal data to the client.*
 
-- [ ] Implement 2D line segment intersection in `backend/physics/raycast.py`.
-- [ ] Implement NumPy vectorized Multi-Wall Cost231 / Motley-Keenan path loss in `backend/physics/engine.py`.
-- [ ] Establish WebSocket endpoint (`/ws/simulation/{id}`) for low-latency live calculation streaming.
-- [ ] Calculate live RSSI ($-\text{dBm}$) and link speed estimates ($\text{Mbps}$) for placed client devices.
-- [ ] Connect drag events in the 3D viewport to real-time telemetry updates.
+- [x] Implement 2D line segment intersection in `backend/physics/raycast.py`.
+- [x] Implement NumPy vectorized Multi-Wall Cost231 / Motley-Keenan path loss in `backend/physics/engine.py`.
+- [x] Establish WebSocket endpoint (`/ws/simulation/{id}`) for low-latency live calculation streaming.
+- [x] Calculate live RSSI ($-\text{dBm}$) and link speed estimates ($\text{Mbps}$) for placed client devices.
+- [x] Implement multi-parameter telemetry (MIMO streams, channel width, custom thickness, traffic satisfaction).
 
 ---
 
