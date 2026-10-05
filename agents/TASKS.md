@@ -19,26 +19,26 @@ This document outlines the phased development plan and task checklist for buildi
 ## Milestone 1: Backend Scaffolding & Database Setup
 *Goal: Establish the Python FastAPI backend, database connection, and data models.*
 
-- [ ] Initialize Python environment and `backend/requirements.txt` (FastAPI, Uvicorn, SQLAlchemy, Pydantic, NumPy, Passlib, PyJWT).
-- [ ] Configure SQLite database engine, session factory, and base model in `backend/database.py`.
-- [ ] Create `User` database model and Pydantic schemas (Register, Login, Token).
-- [ ] Create `Simulation` database model and Pydantic schemas (Spatial attributes, $M \times N$ dimensions, JSON `agents_data`).
-- [ ] Verify database table generation and test basic FastAPI health endpoint (`GET /health`).
+- [x] Initialize Python environment and `backend/requirements.txt` (FastAPI, Uvicorn, SQLAlchemy, Pydantic, NumPy, Bcrypt, PyJWT).
+- [x] Configure SQLite database engine, session factory, and base model in `backend/database.py`.
+- [x] Create `User` database model and Pydantic schemas in `backend/models.py` & `backend/schemas.py`.
+- [x] Create `Simulation` database model and Pydantic schemas in `backend/models.py` & `backend/schemas.py`.
+- [x] Verify database table generation and test basic FastAPI health endpoint (`GET /health`).
 
 ---
 
 ## Milestone 2: Authentication, Security & CRUD APIs
 *Goal: Implement secure user registration, JWT login, and full project CRUD operations.*
 
-- [ ] Implement password hashing (Bcrypt) and JWT token generation/validation in `backend/api/auth.py`.
-- [ ] Implement user registration (`POST /api/auth/register`) and login (`POST /api/auth/login`).
-- [ ] Build `get_current_user` dependency to protect private endpoints.
-- [ ] Implement Simulation CRUD endpoints in `backend/api/simulations.py`:
-  - [ ] `POST /api/simulations` (Create new simulation project with $M \times N$ sizing).
-  - [ ] `GET /api/simulations` (List all projects belonging to authenticated user).
-  - [ ] `GET /api/simulations/{id}` (Retrieve specific project with full layout).
-  - [ ] `PUT /api/simulations/{id}` (Update/Save changes to layout and agent positions).
-  - [ ] `DELETE /api/simulations/{id}` (Delete project with owner verification).
+- [x] Implement password hashing (Bcrypt) and JWT token generation/validation in `backend/auth.py`.
+- [x] Implement user registration (`POST /api/auth/register`) and login (`POST /api/auth/login`) in `backend/api/auth.py`.
+- [x] Build `get_current_user` dependency to protect private endpoints.
+- [x] Implement Simulation CRUD endpoints in `backend/api/simulations.py`:
+  - [x] `POST /api/simulations` (Create new simulation project with $M \times N$ sizing).
+  - [x] `GET /api/simulations` (List all projects belonging to authenticated user).
+  - [x] `GET /api/simulations/{id}` (Retrieve specific project with full layout).
+  - [x] `PUT /api/simulations/{id}` (Update/Save changes to layout and agent positions).
+  - [x] `DELETE /api/simulations/{id}` (Delete project with owner verification).
 
 ---
 
@@ -103,3 +103,123 @@ This document outlines the phased development plan and task checklist for buildi
 - [ ] Score candidate locations based on maximizing client device RSSI and minimizing dead zone area.
 - [ ] Add "Suggest Optimal Router Position" button with visual indicator of ideal placement in 3D CAD space.
 - [ ] Add Floor Plan Export feature (JSON download / PDF summary).
+
+---
+
+## Appendix: Frontend Integration Contract (Essential API Endpoints)
+
+Untuk Frontend Agent / Developer, gunakan kontrak endpoint API berikut:
+
+### 1. Base URL & Headers
+- **Base URL:** `http://localhost:8000` (atau relative `/` saat production).
+- **Authenticated Headers:** `Authorization: Bearer <access_token>`
+
+### 2. Authentication Endpoints
+
+#### A. Register New User
+- **Method & Path:** `POST /api/auth/register`
+- **Request Body:**
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "secretpassword"
+  }
+  ```
+- **Response (`201 Created`):**
+  ```json
+  {
+    "id": "uuid-string",
+    "email": "user@example.com",
+    "created_at": "2026-10-05T13:45:00Z"
+  }
+  ```
+
+#### B. Login & Get JWT Token
+- **Method & Path:** `POST /api/auth/login`
+- **Request Content-Type:** `application/x-www-form-urlencoded`
+- **Form Data:**
+  - `username`: `user@example.com`
+  - `password`: `secretpassword`
+- **Response (`200 OK`):**
+  ```json
+  {
+    "access_token": "eyJhbGciOi...",
+    "token_type": "bearer",
+    "user": {
+      "id": "uuid-string",
+      "email": "user@example.com",
+      "created_at": "2026-10-05T13:45:00Z"
+    }
+  }
+  ```
+
+#### C. Get Current Profile
+- **Method & Path:** `GET /api/auth/me`
+- **Headers:** `Authorization: Bearer <token>`
+- **Response (`200 OK`):** User object.
+
+---
+
+### 3. Simulation Project CRUD Endpoints (Protected)
+
+#### A. Create New Simulation ("New Simulation" Dialog)
+- **Method & Path:** `POST /api/simulations`
+- **Headers:** `Authorization: Bearer <token>`
+- **Request Body:**
+  ```json
+  {
+    "title": "Living Room Floor 1",
+    "room_width": 12.0,
+    "room_length": 8.0,
+    "room_height": 2.8,
+    "grid_step": 0.25,
+    "agents_data": "{\"routers\":[],\"walls\":[],\"devices\":[]}"
+  }
+  ```
+- **Response (`201 Created`):** Complete simulation object with `id`.
+
+#### B. List All User's Saved Simulations
+- **Method & Path:** `GET /api/simulations`
+- **Headers:** `Authorization: Bearer <token>`
+- **Response (`200 OK`):**
+  ```json
+  [
+    {
+      "id": "sim-uuid-1",
+      "title": "Living Room Floor 1",
+      "room_width": 12.0,
+      "room_length": 8.0,
+      "room_height": 2.8,
+      "updated_at": "2026-10-05T13:45:00Z"
+    }
+  ]
+  ```
+
+#### C. Load Specific Simulation
+- **Method & Path:** `GET /api/simulations/{id}`
+- **Headers:** `Authorization: Bearer <token>`
+- **Response (`200 OK`):** Complete simulation object including full `agents_data`.
+
+#### D. Save / Update Simulation
+- **Method & Path:** `PUT /api/simulations/{id}`
+- **Headers:** `Authorization: Bearer <token>`
+- **Request Body (Partial fields allowed):**
+  ```json
+  {
+    "title": "Updated Room Name",
+    "room_width": 14.0,
+    "agents_data": "{\"routers\":[...],\"walls\":[...],\"devices\":[...]}"
+  }
+  ```
+- **Response (`200 OK`):** Updated simulation record.
+
+#### E. Delete Simulation
+- **Method & Path:** `DELETE /api/simulations/{id}`
+- **Headers:** `Authorization: Bearer <token>`
+- **Response (`204 No Content`):** Empty.
+
+---
+
+### 4. Health Check
+- **Method & Path:** `GET /health`
+- **Response (`200 OK`):** `{"status": "ok", "project": "3D CAD WiFi Simulator"}`
